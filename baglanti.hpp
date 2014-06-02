@@ -16,7 +16,7 @@ class baglanti
         explicit baglanti ( boost::shared_ptr<boost::asio::io_service>& sp_io_service, const std::string& a3nwan, const std::string& madkhal );
 
         /// Start the first asynchronous operation for this Obj
-        void start();
+        void bashla();
 
         /// hndle recv completion
         void handle_receive_from ( const boost::system::error_code& error, std::size_t bytes_transferred );
@@ -25,7 +25,7 @@ class baglanti
         boost::shared_ptr<boost::asio::ip::udp::socket> sp_priz;
         boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_gonderen_bitishnoktasi_;
         boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_alici_bitishnoktasi_;
-
+        boost::shared_ptr<boost::asio::io_service::strand> sp_strand_;
         /// bffer 4 incming data
         boost::array<char, 8192> gelen_buffer_;
 };

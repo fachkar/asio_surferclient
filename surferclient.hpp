@@ -18,6 +18,8 @@ public:
     void run();
     void ballesh();
     void handle_stop();
+    bool sendAnInit();
+    int BuildStringPacket ( char* ThisPacket, std::wstring & ParmString, uint16_t PacketSize );
 
     std::size_t a3adad_alkhitan_;
 
