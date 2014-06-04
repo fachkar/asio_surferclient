@@ -19,6 +19,7 @@ public:
     void ballesh();
     void handle_stop();
     bool sendAnInit();
+    int ConvertToAsciiChar ( char* OutputBuffer, uint32_t OutputSize, const char* SourceBuffer, uint32_t SourceSizeInChar );
     int BuildStringPacket ( char* ThisPacket, std::wstring & ParmString, uint16_t PacketSize );
 
     std::size_t a3adad_alkhitan_;

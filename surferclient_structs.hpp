@@ -12,6 +12,17 @@ typedef struct _FILETIME {
     uint32_t dwHighDateTime;
 } FILETIME, *PFILETIME, *LPFILETIME;
 
+typedef struct {
+    uint8_t  First;
+    uint8_t  Last;
+    uint8_t  LinkTbl  [256];
+    uint8_t  MemIndex [256];
+    uint16_t PagesPerCache;
+    uint16_t MaxPageSize;
+    FILETIME CacheID;
+
+} PDALINKSINFO, * PPDALINKSINFO;
+
 typedef struct _SYSTEMTIME {
     uint16_t wYear;
     uint16_t wMonth;
@@ -24,12 +35,12 @@ typedef struct _SYSTEMTIME {
 } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
 
 typedef struct {
-    uint8_t  Command;                                       // MUST BE 'F'
-    uint8_t  Len;                                           // MUST BE  11 THE SIZE OF THIS STRUCTURE
+    uint8_t  Command;
+    uint8_t  Len;
 
-    uint8_t  Features[8];                                   // MULTIPLE BLOCK OF FEATURES
+    uint8_t  Features[8];
 
-    uint8_t  Terminator;                                    // MUST BE 0
+    uint8_t  Terminator;
 
 } PADFEATUREINFO, * PPADFEATUREINFO;
 
@@ -148,6 +159,48 @@ typedef struct {
 
 } CACHEINFO, * PCACHEINFO;
 
+typedef struct {
+    long All;
+    bool Raw,
+         Text,
+         Frame,
+         Fill,
+         Scroll,
+         Beacon,
+         Task,
+         TimeStamp,
+         Status,
+         Errors;
+
+    bool ProcessChannel,
+         EnableSendBeacon,
+         SendInitOnStart,
+         ClearScreenOnStart;
+
+    int      HostStatus;
+    int      HostTimeOut;
+
+    bool     HardwareFlow;
+    bool     EnableRTS,
+             EnableDTR,
+             UseCarrier,
+             DirectConnect;
+
+    bool     EnablePenMove,
+             EnablePenUp,
+             EnablePenClicks;
+
+    bool     EnableScreenPos;
+
+    uint8_t     Features [8];
+
+    uint32_t    ImageCapsRequested;
+
+    uint32_t    LangID;
+
+    bool     EnableTransparency;
+
+} PDASettings, * PPDASettings;
 
 
 # endif
