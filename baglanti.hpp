@@ -17,17 +17,18 @@ class baglanti
 
         /// Start the first asynchronous operation for this Obj
         void bashla();
-
+        void sendAMsg ( std::string& msgo );
         /// hndle recv completion
         void handle_receive_from ( const boost::system::error_code& error, std::size_t bytes_transferred );
-
+        void handle_send_to ( const boost::system::error_code& error, std::size_t bytes_sent );
         /// sockt for the cnnction
         boost::shared_ptr<boost::asio::ip::udp::socket> sp_priz;
-        boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_gonderen_bitishnoktasi_;
-        boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_alici_bitishnoktasi_;
+        boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_uzak_bitishnoktasi_;
         boost::shared_ptr<boost::asio::io_service::strand> sp_strand_;
         /// bffer 4 incming data
         boost::array<char, 8192> gelen_buffer_;
+
 };
 
 # endif
+

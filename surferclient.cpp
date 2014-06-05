@@ -39,15 +39,21 @@ void surferclient::run()
 
 void surferclient::ballesh()
 {
-
     sp_baglanti_->bashla();
 }
 
 void surferclient::handle_stop()
 {
+    std::cout <<  __FUNCTION__ <<  std::endl;
     sp_shaggil_.reset();
     sp_mukhdm_io_->stop();
 }
+
+void surferclient::sendAMsg ( std::string& msgo )
+{
+    sp_baglanti_->sendAMsg ( msgo );
+}
+
 
 
 int surferclient::ConvertToAsciiChar ( char* OutputBuffer, uint32_t OutputSize, const char* SourceBuffer, uint32_t SourceSizeInChar )
@@ -242,9 +248,8 @@ bool surferclient::sendAnInit()
         CacheInfo.Terminator             =  0;
 
     }
-    
-    if ( UnicodeSupport )
-    {
+
+    if ( UnicodeSupport ) {
         InitInfo.Len                    +=  sizeof ( PadLangIdInfo );
         PadLangIdInfo.BlockType          =  'L';
         PadLangIdInfo.BlockLen           =  sizeof ( PadLangIdInfo );
