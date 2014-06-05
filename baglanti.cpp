@@ -17,11 +17,12 @@ baglanti::baglanti ( boost::shared_ptr<boost::asio::io_service>& sp_io_service, 
 
 void baglanti::bashla()
 {
-    gelen_buffer_.assign(0);
-    sp_priz->async_receive_from ( boost::asio::buffer ( gelen_buffer_ ), *sp_uzak_bitishnoktasi_,
+    boost::shared_ptr<boost::array<char, 8192> > sp_bffr_arry ( new boost::array<char, 8192> );
+    vctr_sp_gelen_buffer_.push_back ( sp_bffr_arry );
+    sp_priz->async_receive_from ( boost::asio::buffer ( *sp_bffr_arry ), *sp_uzak_bitishnoktasi_,
                                   sp_strand_->wrap ( boost::bind ( &baglanti::handle_receive_from, this,
                                                                    boost::asio::placeholders::error,
-                                                                   boost::asio::placeholders::bytes_transferred ) ) );
+                                                                   boost::asio::placeholders::bytes_transferred,  sp_bffr_arry ) ) );
 }
 
 void baglanti::sendAMsg ( std::string& msgo )
@@ -32,17 +33,18 @@ void baglanti::sendAMsg ( std::string& msgo )
 }
 
 
-void baglanti::handle_receive_from ( const boost::system::error_code& error, std::size_t bytes_transferred )
+void baglanti::handle_receive_from ( const boost::system::error_code& error, std::size_t bytes_transferred ,  boost::shared_ptr<boost::array<char, 8192> > sp_ba )
 {
-    gelen_buffer_.assign(0);
-    sp_priz->async_receive_from ( boost::asio::buffer ( gelen_buffer_ ), *sp_uzak_bitishnoktasi_,
+    boost::shared_ptr<boost::array<char, 8192> > sp_bffr_arry ( new boost::array<char, 8192> );
+    vctr_sp_gelen_buffer_.push_back ( sp_bffr_arry );
+    sp_priz->async_receive_from ( boost::asio::buffer ( *sp_bffr_arry ), *sp_uzak_bitishnoktasi_,
                                   sp_strand_->wrap ( boost::bind ( &baglanti::handle_receive_from, this,
                                                                    boost::asio::placeholders::error,
-                                                                   boost::asio::placeholders::bytes_transferred ) ) );
+                                                                   boost::asio::placeholders::bytes_transferred ,  sp_bffr_arry ) ) );
 
     if ( !error  && bytes_transferred > 0 ) {
-        std::cout << "received :" <<  gelen_buffer_.c_array() <<  std::endl;
-
+        std::cout << "received :" <<  sp_ba->c_array() <<  std::endl;
+        sp_ba.reset();
 
     }
 }
@@ -53,11 +55,7 @@ void baglanti::handle_send_to ( const boost::system::error_code& error, std::siz
     if ( !error && bytes_sent > 0 ) {
         std::cout <<  "sent: " <<  bytes_sent <<  std::endl;
     }
-    gelen_buffer_.assign(0);
-    sp_priz->async_receive_from ( boost::asio::buffer ( gelen_buffer_ ), *sp_uzak_bitishnoktasi_,
-                                  sp_strand_->wrap ( boost::bind ( &baglanti::handle_receive_from, this,
-                                                                   boost::asio::placeholders::error,
-                                                                   boost::asio::placeholders::bytes_transferred ) ) );
+
 }
 
 
