@@ -27,7 +27,6 @@ class baglanti
         boost::shared_ptr<boost::asio::ip::udp::endpoint> sp_uzak_bitishnoktasi_;
         boost::shared_ptr<boost::asio::io_service::strand> sp_strand_;
         /// bffer 4 incming data
-        boost::shared_ptr<boost::array<char, 8192> > sp_gelen_buffer_;
         std::vector< boost::shared_ptr<boost::array<char, 8192> > > vctr_sp_gelen_buffer_;
 };
 

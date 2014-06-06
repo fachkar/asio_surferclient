@@ -35,18 +35,30 @@ void baglanti::sendAMsg ( std::string& msgo )
 
 void baglanti::handle_receive_from ( const boost::system::error_code& error, std::size_t bytes_transferred ,  boost::shared_ptr<boost::array<char, 8192> > sp_ba )
 {
-    boost::shared_ptr<boost::array<char, 8192> > sp_bffr_arry ( new boost::array<char, 8192> );
-    vctr_sp_gelen_buffer_.push_back ( sp_bffr_arry );
-    sp_priz->async_receive_from ( boost::asio::buffer ( *sp_bffr_arry ), *sp_uzak_bitishnoktasi_,
-                                  sp_strand_->wrap ( boost::bind ( &baglanti::handle_receive_from, this,
-                                                                   boost::asio::placeholders::error,
-                                                                   boost::asio::placeholders::bytes_transferred ,  sp_bffr_arry ) ) );
+    if ( vctr_sp_gelen_buffer_.size() < 20 ) {
+        boost::shared_ptr<boost::array<char, 8192> > sp_bffr_arry ( new boost::array<char, 8192> );
+        vctr_sp_gelen_buffer_.push_back ( sp_bffr_arry );
+        sp_priz->async_receive_from ( boost::asio::buffer ( *sp_bffr_arry ), *sp_uzak_bitishnoktasi_,
+                                      sp_strand_->wrap ( boost::bind ( &baglanti::handle_receive_from, this,
+                                                                       boost::asio::placeholders::error,
+                                                                       boost::asio::placeholders::bytes_transferred ,  sp_bffr_arry ) ) );
+    }
 
     if ( !error  && bytes_transferred > 0 ) {
         std::cout << "received :" <<  sp_ba->c_array() <<  std::endl;
-        sp_ba.reset();
-
     }
+
+    for ( std::vector<boost::shared_ptr<boost::array<char, 8192> > >::iterator it = vctr_sp_gelen_buffer_.begin(); it != vctr_sp_gelen_buffer_.end(); ++it ) {
+        //std::cout << "it contents :" << (*it)->c_array() <<  std::endl;
+        if ( *it == sp_ba ) {
+            //std::cout << "erasing :" << (*it)->c_array() <<  std::endl;
+            vctr_sp_gelen_buffer_.erase ( it );
+            //(*it).reset();
+            break;
+        }
+    }
+
+    sp_ba.reset();
 }
 
 
@@ -55,7 +67,6 @@ void baglanti::handle_send_to ( const boost::system::error_code& error, std::siz
     if ( !error && bytes_sent > 0 ) {
         std::cout <<  "sent: " <<  bytes_sent <<  std::endl;
     }
-
 }
 
 
